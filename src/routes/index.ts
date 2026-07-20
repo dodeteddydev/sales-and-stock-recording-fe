@@ -1,3 +1,3 @@
 export * from "./AppRoutes";
-export * from "./paths";
+export * from "./pathRoutes";
 export * from "./ProtectedRoute";

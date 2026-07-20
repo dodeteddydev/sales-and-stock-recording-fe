@@ -1,3 +1,10 @@
+import styles from "./LoginPage.module.css";
+
 export const LoginPage = () => {
-  return <div>LoginPage</div>;
+  return (
+    <section className={styles.wrapper}>
+      <div className={styles.leftSection}>LEFT</div>
+      <div className={styles.rightSection}>RIGHT</div>
+    </section>
+  );
 };

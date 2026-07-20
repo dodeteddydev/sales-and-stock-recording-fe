@@ -1,0 +1,15 @@
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.leftSection {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.rightSection {
+  flex: 0 0 50%;
+  max-width: 50%;
+  background-color: var(--color-primary);
+}
