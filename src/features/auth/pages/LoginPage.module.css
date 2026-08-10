@@ -1,15 +1,36 @@
 .wrapper {
+  height: 100vh;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-8);
+
+  padding: var(--space-5);
 }
 
-.leftSection {
-  flex: 0 0 50%;
-  max-width: 50%;
+.appTitle {
+  font-size: var(--font-size-md);
+  margin-bottom: var(--space-8);
 }
 
-.rightSection {
-  flex: 0 0 50%;
-  max-width: 50%;
-  background-color: var(--color-primary);
+.loginTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  margin-bottom: var(--space-3);
+}
+
+.description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.wrapperForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.buttonWrapper {
+  width: 100%;
+  margin-top: var(--space-5);
 }
