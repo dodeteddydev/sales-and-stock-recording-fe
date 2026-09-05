@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { pathRoutes } from "./pathRoutes";
 import { ProtectedRoute } from "./ProtectedRoute";
 
-import { LoginPage } from "@/features/auth/pages/LoginPage";
+import { LoginPage } from "@/features/login/pages/LoginPage";
 import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
 
 export const AppRoutes = () => {

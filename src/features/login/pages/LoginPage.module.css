@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: var(--space-3);
 
   padding: var(--space-5);
   height: 100vh;
@@ -22,17 +21,17 @@
 .loginTitle {
   font-size: var(--font-size-lg);
   font-weight: 500;
-  margin-bottom: var(--space-3);
 }
 
 .description {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
+  margin-bottom: var(--space-5);
 }
 
 .buttonWrapper {
   width: 100%;
-  margin-top: var(--space-5);
+  margin-top: var(--space-8);
 }
 
 .sidePanel {

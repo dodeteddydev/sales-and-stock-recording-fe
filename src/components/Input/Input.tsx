@@ -4,10 +4,9 @@ import styles from "./Input.module.css";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
-  error?: string;
 };
 
-export const Input = ({ label, error, ...props }: InputProps) => {
+export const Input = ({ label, ...props }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const isPassword = props.type === "password";
@@ -38,8 +37,6 @@ export const Input = ({ label, error, ...props }: InputProps) => {
           </button>
         )}
       </div>
-
-      {error && <p className={styles.error}>{error}</p>}
     </div>
   );
 };
