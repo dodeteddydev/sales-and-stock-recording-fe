@@ -14,9 +14,15 @@ import { LoginForm } from "../components/LoginForm";
 import { login } from "../services/loginService";
 import type { LoginRequest } from "../types/login";
 
+import { useGlobalContext } from "@/context/useGlobalContext";
+import { pathRoutes } from "@/routes";
+import { useNavigate } from "react-router-dom";
 import styles from "./LoginPage.module.css";
 
 export const LoginPage = () => {
+  const { setIsAuthenticated } = useGlobalContext();
+  const navigate = useNavigate();
+
   const initialRequest: LoginRequest = {
     username: "",
     password: "",
@@ -35,14 +41,20 @@ export const LoginPage = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const handleNavigateToDashboard = () => {
+    setIsAuthenticated(true);
+    navigate(pathRoutes.dashboard, { replace: true });
+  };
+
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
       const response = await login(values);
 
-      toast.success(response.data.message);
-      localStorage.setItem(STORAGE_KEYS.accessToken, response.data.data.token);
       setValues(initialRequest);
+      localStorage.setItem(STORAGE_KEYS.accessToken, response.data.data.token);
+      toast.success(response.data.message);
+      handleNavigateToDashboard();
     } catch (error) {
       toast.error(getErrorMessage(error));
     } finally {
