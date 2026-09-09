@@ -1,20 +1,31 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
-import { PATHS } from "./paths";
+import { useGlobalContext } from "@/context/useGlobalContext";
+import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
+import { LoginPage } from "@/features/login/pages/LoginPage";
+import { pathRoutes } from "./pathRoutes";
 import { ProtectedRoute } from "./ProtectedRoute";
 
-import { LoginPage } from "@/features/auth/pages/LoginPage";
-import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
-
 export const AppRoutes = () => {
-  const isAuthenticated = false;
+  const { isAuthenticated } = useGlobalContext();
 
   return (
     <Routes>
-      <Route path={PATHS.auth} element={<LoginPage />} />
-
+      {/* Login */}
       <Route
-        path={PATHS.dashboard}
+        path={pathRoutes.auth}
+        element={
+          isAuthenticated ? (
+            <Navigate to={pathRoutes.dashboard} replace />
+          ) : (
+            <LoginPage />
+          )
+        }
+      />
+
+      {/* Dashboard */}
+      <Route
+        path={pathRoutes.dashboard}
         element={
           <ProtectedRoute isAuthenticated={isAuthenticated}>
             <DashboardPage />

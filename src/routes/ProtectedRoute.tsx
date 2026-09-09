@@ -1,11 +1,14 @@
 import { Navigate } from "react-router-dom";
 
-type Props = {
+type ProtectedRouteProps = {
   isAuthenticated: boolean;
   children: React.ReactNode;
 };
 
-export const ProtectedRoute = ({ isAuthenticated, children }: Props) => {
+export const ProtectedRoute = ({
+  isAuthenticated,
+  children,
+}: ProtectedRouteProps) => {
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
