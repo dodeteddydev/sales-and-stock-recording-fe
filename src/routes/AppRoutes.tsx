@@ -1,8 +1,14 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import { useGlobalContext } from "@/context/useGlobalContext";
+import { CashFlowPage } from "@/features/cash-flow/pages/CashFlowPage";
+import { CustomerPage } from "@/features/customer/pages/CustomerPage";
 import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
 import { LoginPage } from "@/features/login/pages/LoginPage";
+import { ProductPage } from "@/features/product/pages/ProductPage";
+import { RestockPage } from "@/features/restock/pages/RestockPage";
+import { SalesPage } from "@/features/sales/pages/SalesPage";
+import { MainLayout } from "@/layouts/MainLayout";
 import { pathRoutes } from "./pathRoutes";
 import { ProtectedRoute } from "./ProtectedRoute";
 
@@ -11,7 +17,7 @@ export const AppRoutes = () => {
 
   return (
     <Routes>
-      {/* Login */}
+      {/* Public */}
       <Route
         path={pathRoutes.auth}
         element={
@@ -23,15 +29,21 @@ export const AppRoutes = () => {
         }
       />
 
-      {/* Dashboard */}
+      {/* Protected */}
       <Route
-        path={pathRoutes.dashboard}
         element={
           <ProtectedRoute isAuthenticated={isAuthenticated}>
-            <DashboardPage />
+            <MainLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route path={pathRoutes.dashboard} element={<DashboardPage />} />
+        <Route path={pathRoutes.customer} element={<CustomerPage />} />
+        <Route path={pathRoutes.product} element={<ProductPage />} />
+        <Route path={pathRoutes.restock} element={<RestockPage />} />
+        <Route path={pathRoutes.sales} element={<SalesPage />} />
+        <Route path={pathRoutes.cashFlow} element={<CashFlowPage />} />
+      </Route>
     </Routes>
   );
 };

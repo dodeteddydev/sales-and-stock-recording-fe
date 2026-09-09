@@ -1,0 +1,21 @@
+.layout {
+  min-height: 100vh;
+}
+
+.main {
+  min-width: 0;
+}
+
+.content {
+  padding: var(--space-5);
+}
+
+@media (min-width: 726px) {
+  .layout {
+    display: flex;
+  }
+
+  .main {
+    flex: 1;
+  }
+}
