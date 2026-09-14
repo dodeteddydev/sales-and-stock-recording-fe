@@ -1,0 +1,10 @@
+.buttonIcon {
+  border: none;
+  background-color: transparent;
+
+  cursor: pointer;
+}
+
+.buttonIcon:hover {
+  opacity: 0.6;
+}

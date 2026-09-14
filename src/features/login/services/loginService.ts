@@ -8,5 +8,5 @@ export const login = async (payload: LoginRequest) => {
     payload,
   );
 
-  return response;
+  return response.data;
 };

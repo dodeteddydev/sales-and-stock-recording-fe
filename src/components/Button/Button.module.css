@@ -19,6 +19,11 @@
   cursor: pointer;
 }
 
+.button.disabled {
+  cursor: not-allowed;
+  background: var(--color-primary-hover);
+}
+
 .button:hover {
   background: var(--color-primary-hover);
 }

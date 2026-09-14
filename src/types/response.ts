@@ -5,16 +5,24 @@ export type ApiResponse<T> = {
   errors: string | string[];
 };
 
-export type MetaResponse = {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-  hasNext: boolean;
-  hasPrev: boolean;
+export type ListResponse<T> = {
+  data: T;
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
 };
 
 export type RefreshTokenResponse = {
   token: string;
   refreshToken: string;
+};
+
+export type IdNameResponse = {
+  id: number;
+  name: number;
 };
