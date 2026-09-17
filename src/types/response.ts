@@ -7,14 +7,15 @@ export type ApiResponse<T> = {
 
 export type ListResponse<T> = {
   data: T;
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-  };
+  meta: Meta;
+};
+export type Meta = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
 };
 
 export type RefreshTokenResponse = {

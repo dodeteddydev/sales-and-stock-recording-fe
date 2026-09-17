@@ -4,7 +4,6 @@ import { ButtonIcon } from "@/components/Button/ButtonIcon";
 import { Table } from "@/components/Table/Table";
 import { Td } from "@/components/Table/Td";
 import { Th } from "@/components/Table/Th";
-import type { ListResponse } from "@/types/response";
 import { formatDate } from "@/utilities/formatDate";
 import type { CustomerResponse } from "../types/customer";
 
@@ -13,10 +12,15 @@ import styles from "./CustomerTable.module.css";
 
 type CustomerTableProps = {
   isLoading: boolean;
-  data?: ListResponse<CustomerResponse[]>;
+  data?: CustomerResponse[];
+  onClickEdit: (data: CustomerResponse) => void;
 };
 
-export const CustomerTable = ({ isLoading, data }: CustomerTableProps) => {
+export const CustomerTable = ({
+  isLoading,
+  data,
+  onClickEdit,
+}: CustomerTableProps) => {
   return (
     <Table>
       <thead>
@@ -30,8 +34,8 @@ export const CustomerTable = ({ isLoading, data }: CustomerTableProps) => {
       </thead>
 
       <tbody>
-        {data?.data && data?.data?.length > 0 && !isLoading ? (
-          data?.data?.map((item, index) => (
+        {data && data?.length > 0 && !isLoading ? (
+          data?.map((item, index) => (
             <tr key={`${item.id}-${index}`}>
               <Td>{index + 1}</Td>
               <Td>{item.name || "-"}</Td>
@@ -44,7 +48,7 @@ export const CustomerTable = ({ isLoading, data }: CustomerTableProps) => {
               </Td>
 
               <Td textEnd>
-                <ButtonIcon icon={Edit} />
+                <ButtonIcon icon={Edit} onClick={() => onClickEdit(item)} />
               </Td>
             </tr>
           ))

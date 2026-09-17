@@ -1,21 +1,20 @@
 import { Input } from "@/components/Input/Input";
 
 import styles from "./CustomerFilters.module.css";
-import type { Params } from "@/types/request";
 
 type CustomerFiltersProps = {
-  value: Params;
-  onChange: <K extends keyof Params>(name: K, value: Params[K]) => void;
+  search: string;
+  onSearch: (search: string) => void;
 };
 
-export const CustomerFilters = ({ value, onChange }: CustomerFiltersProps) => {
+export const CustomerFilters = ({ search, onSearch }: CustomerFiltersProps) => {
   return (
     <section className={styles.customerFilters}>
       <Input
         label="Search"
         placeholder="e.g. johndoe"
-        value={value.search}
-        onChange={(e) => onChange("search", e.target.value)}
+        value={search}
+        onChange={(e) => onSearch(e.target.value)}
       />
     </section>
   );
