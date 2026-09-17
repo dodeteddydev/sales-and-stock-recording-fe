@@ -1,0 +1,32 @@
+.tableWrapper {
+  overflow: scroll;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.th {
+  text-align: left;
+  padding: var(--space-3);
+  background-color: var(--color-border);
+
+  font-size: var(--font-size-sm);
+}
+
+.th.textEnd {
+  text-align: end;
+}
+
+.td {
+  text-align: left;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+
+  font-size: var(--font-size-sm);
+}
+
+.td.textEnd {
+  text-align: end;
+}

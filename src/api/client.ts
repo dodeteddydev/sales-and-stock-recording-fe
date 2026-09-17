@@ -29,8 +29,11 @@ const setAccessToken = (accessToken: string | null) => {
 
 const refreshAccessToken = async (): Promise<string | null> => {
   try {
-    const response =
-      await api.post<ApiResponse<RefreshTokenResponse>>("/auth/refresh");
+    const refreshToken = localStorage.getItem(STORAGE_KEYS.refreshToken);
+    const response = await api.post<ApiResponse<RefreshTokenResponse>>(
+      "/auth/refresh-token",
+      { refreshToken },
+    );
 
     return response.data.data.token;
   } catch {
@@ -66,7 +69,7 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    if (originalRequest.url?.includes("/auth/refresh")) {
+    if (originalRequest.url?.includes("/auth/refresh-token")) {
       setAccessToken(null);
 
       return Promise.reject(error);

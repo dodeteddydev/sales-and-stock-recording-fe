@@ -1,22 +1,20 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/Button/Button";
-import { Form } from "@/components/Form/Form";
-import { FormProvider } from "@/context/FormProvider";
-
 import LogoSangaSanga from "@/assets/images/sanga-sanga.webp";
 import SidePanelVector from "@/assets/vectors/side-panel.svg";
+import { Button } from "@/components/Button/Button";
+import { Form } from "@/components/Form/Form";
 import { STORAGE_KEYS } from "@/constans/storageKey";
-import { getErrorMessage } from "@/utilities/error";
-
-import { LoginForm } from "../components/LoginForm";
-import { login } from "../services/loginService";
-import type { LoginRequest } from "../types/login";
-
+import { FormProvider } from "@/context/FormProvider";
 import { useGlobalContext } from "@/context/useGlobalContext";
 import { pathRoutes } from "@/routes";
+import { getErrorMessage } from "@/utilities/error";
 import { useNavigate } from "react-router-dom";
+import { LoginForm } from "../components/LoginForm";
+import { useLogin } from "../hooks/useLogin";
+import type { LoginRequest } from "../types/login";
+
 import styles from "./LoginPage.module.css";
 
 export const LoginPage = () => {
@@ -27,39 +25,35 @@ export const LoginPage = () => {
     username: "",
     password: "",
   };
-  const [values, setValues] = useState<LoginRequest>(initialRequest);
+  const [request, setRequest] = useState<LoginRequest>(initialRequest);
 
   const handleChange = <K extends keyof LoginRequest>(
     name: K,
     value: LoginRequest[K],
   ) => {
-    setValues((prev) => ({
+    setRequest((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const handleNavigateToDashboard = () => {
-    setIsAuthenticated(true);
-    navigate(pathRoutes.dashboard, { replace: true });
-  };
+  const { isLoading, mutate } = useLogin({
+    onSuccess: (response) => {
+      setRequest(initialRequest);
+      toast.success(response.message);
+      localStorage.setItem(STORAGE_KEYS.accessToken, response.data.token);
+      localStorage.setItem(
+        STORAGE_KEYS.refreshToken,
+        response.data.refreshToken,
+      );
+      setIsAuthenticated(true);
+      navigate(pathRoutes.dashboard, { replace: true });
+    },
+    onError: (error) => toast.error(getErrorMessage(error)),
+  });
 
   const handleSubmit = async () => {
-    setIsLoading(true);
-    try {
-      const response = await login(values);
-
-      setValues(initialRequest);
-      localStorage.setItem(STORAGE_KEYS.accessToken, response.data.data.token);
-      toast.success(response.data.message);
-      handleNavigateToDashboard();
-    } catch (error) {
-      toast.error(getErrorMessage(error));
-    } finally {
-      setIsLoading(false);
-    }
+    await mutate(request);
   };
 
   return (
@@ -77,7 +71,7 @@ export const LoginPage = () => {
         </p>
 
         <Form onSubmit={handleSubmit}>
-          <FormProvider values={values} onChange={handleChange}>
+          <FormProvider values={request} onChange={handleChange}>
             <LoginForm />
           </FormProvider>
 

@@ -1,0 +1,14 @@
+.addButtonWrapper {
+  display: flex;
+  justify-content: end;
+}
+
+.addButton {
+  width: 50%;
+}
+
+@media (min-width: 768px) {
+  .addButton {
+    width: 10%;
+  }
+}
