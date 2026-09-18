@@ -6,25 +6,28 @@ import { EmptyState } from "@/components/EmpyState/EmptyState";
 import { Table } from "@/components/Table/Table";
 import { Td } from "@/components/Table/Td";
 import { Th } from "@/components/Table/Th";
-import type { CustomerResponse } from "../types/customer";
+import { formatRupiah } from "@/utilities/formatRupiah";
+import type { ProductResponse } from "../types/product";
 
-type CustomerTableProps = {
+type ProductTableProps = {
   isLoading: boolean;
-  data?: CustomerResponse[];
-  onClickEdit: (data: CustomerResponse) => void;
+  data?: ProductResponse[];
+  onClickEdit: (data: ProductResponse) => void;
 };
 
-export const CustomerTable = ({
+export const ProductTable = ({
   isLoading,
   data,
   onClickEdit,
-}: CustomerTableProps) => {
+}: ProductTableProps) => {
   return (
     <Table>
       <thead>
         <tr>
-          <Th>Name</Th>
-          <Th>Phone</Th>
+          <Th>Product Name</Th>
+          <Th>Base Price</Th>
+          <Th>Sell Price</Th>
+          <Th>Stock</Th>
           <Th>Created</Th>
           <Th>Updated</Th>
           <Th />
@@ -36,7 +39,9 @@ export const CustomerTable = ({
           data?.map((item, index) => (
             <tr key={`${item.id}-${index}`}>
               <Td>{item.name || "-"}</Td>
-              <Td>{item.phone || "-"}</Td>
+              <Td>{formatRupiah(item.basePrice ?? 0)}</Td>
+              <Td>{formatRupiah(item.sellPrice ?? 0)}</Td>
+              <Td>{item.stock ?? 0}</Td>
               <Td>
                 <AuditInfo user={item.createdBy} date={item.createdAt} />
               </Td>
@@ -50,7 +55,7 @@ export const CustomerTable = ({
           ))
         ) : (
           <tr>
-            <Td colSpan={5}>
+            <Td colSpan={6}>
               <EmptyState isLoading={isLoading} />
             </Td>
           </tr>
