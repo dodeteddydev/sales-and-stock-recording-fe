@@ -1,14 +1,18 @@
 import type { IdNameResponse } from "@/types/response";
 
-export type CustomerRequest = {
+export type ProductRequest = {
   name: string;
-  phone: string;
+  basePrice: number;
+  sellPrice: number;
+  stock: number;
 };
 
-export type CustomerResponse = {
+export type ProductResponse = {
   id: number;
   name: string;
-  phone: string;
+  basePrice: number;
+  sellPrice: number;
+  stock: number;
   createdAt: string;
   updatedAt: string;
   createdBy: IdNameResponse;

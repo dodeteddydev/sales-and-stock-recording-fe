@@ -68,7 +68,10 @@ export const CustomerPage = () => {
     }));
   };
 
-  const handleClickAdd = () => setIsOpen(true);
+  const handleClickAdd = () => {
+    setRequest(initialRequest);
+    setIsOpen(true);
+  };
 
   const handleClickEdit = (data: CustomerResponse) => {
     setId(data.id);
@@ -136,7 +139,7 @@ export const CustomerPage = () => {
           onClickEdit={handleClickEdit}
         />
 
-        {data?.data.meta && (
+        {data?.data.meta && data.data.meta.total > 10 && (
           <Pagination
             meta={data.data.meta}
             onChangeLimit={(limit) => handleChangeFilter("limit", limit)}
