@@ -158,7 +158,7 @@ export const ProductPage = () => {
       >
         <Form onSubmit={handleSubmit}>
           <FormProvider values={request} onChange={handleChange}>
-            <ProductForm />
+            <ProductForm isEdit={!!id} />
           </FormProvider>
 
           <Button disabled={addProduct.isLoading}>

@@ -2,7 +2,11 @@ import { Input } from "@/components/Input/Input";
 import { useFormContext } from "@/context/useFormContext";
 import type { ProductRequest } from "../types/product";
 
-export const ProductForm = () => {
+type ProductFormProps = {
+  isEdit: boolean;
+};
+
+export const ProductForm = ({ isEdit }: ProductFormProps) => {
   const { values, onChange } = useFormContext<ProductRequest>();
 
   return (
@@ -37,15 +41,17 @@ export const ProductForm = () => {
         required
       />
 
-      <Input
-        id="stock"
-        label="Stock"
-        placeholder="e.g. 50"
-        type="number"
-        value={values.stock}
-        onChange={(e) => onChange("stock", e.target.valueAsNumber)}
-        required
-      />
+      {!isEdit && (
+        <Input
+          id="stock"
+          label="Stock"
+          placeholder="e.g. 50"
+          type="number"
+          value={values.stock}
+          onChange={(e) => onChange("stock", e.target.valueAsNumber)}
+          required
+        />
+      )}
     </>
   );
 };
