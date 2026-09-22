@@ -3,7 +3,7 @@ import type { Params } from "@/types/request";
 import type { ApiResponse, ListResponse } from "@/types/response";
 import type { ProductRequest, ProductResponse } from "../types/product";
 
-export const getProduct = async (params: Params) => {
+export const getProduct = async (params?: Params) => {
   const response = await api.get<ApiResponse<ListResponse<ProductResponse[]>>>(
     "/product",
     { params },

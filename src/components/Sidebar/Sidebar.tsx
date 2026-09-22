@@ -1,5 +1,5 @@
 import {
-  CircleDollarSign,
+  ArrowLeftRight,
   LayoutDashboard,
   LogOut,
   Package,
@@ -50,7 +50,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     {
       label: "Cash Flow",
       path: pathRoutes.cashFlow,
-      icon: CircleDollarSign,
+      icon: ArrowLeftRight,
     },
   ];
 

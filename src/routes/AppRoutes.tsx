@@ -1,7 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
+import { NotFoundPage } from "@/components/NotFound/NotFound";
 import { useGlobalContext } from "@/context/useGlobalContext";
-import { CashFlowPage } from "@/features/cash-flow/pages/CashFlowPage";
+import { CashFlowPage } from "@/features/cashflow/pages/CashFlowPage";
 import { CustomerPage } from "@/features/customer/pages/CustomerPage";
 import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
 import { LoginPage } from "@/features/login/pages/LoginPage";
@@ -43,6 +44,9 @@ export const AppRoutes = () => {
         <Route path={pathRoutes.restock} element={<RestockPage />} />
         <Route path={pathRoutes.sales} element={<SalesPage />} />
         <Route path={pathRoutes.cashFlow} element={<CashFlowPage />} />
+
+        {/* 404 */}
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );
