@@ -1,72 +1,77 @@
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+
 import { Input } from "@/components/Input/Input";
-import { Select } from "@/components/Select/Select";
 import { useFormContext } from "@/context/useFormContext";
-import { getProduct } from "@/features/product/services/productService";
-import type { ProductResponse } from "@/features/product/types/product";
-import { getErrorMessage } from "@/utilities/error";
-import type { RestockRequest } from "../types/restock";
+import { useGetProduct } from "@/features/product/hooks/useGetProduct";
+import { useDebounce } from "@/hooks/useDebounce";
+import type { Params } from "@/types/request";
+import type { RestockRequest, RestockResponse } from "../types/restock";
+
+import styles from "./RestockForm.module.css";
 
 type RestockFormProps = {
-  isEdit: boolean;
+  data: RestockResponse;
 };
 
-export const RestockForm = ({ isEdit }: RestockFormProps) => {
+export const RestockForm = ({ data }: RestockFormProps) => {
   const { values, onChange } = useFormContext<RestockRequest>();
 
-  const [isLoading, setIsloading] = useState(false);
-  const [dataProduct, setDataProduct] = useState<ProductResponse[]>([]);
+  const [filtersProduct, setFiltersProduct] = useState<Params>({
+    search: "",
+    page: 1,
+    limit: 10,
+  });
+  const debounceFilterProduct = useDebounce(filtersProduct, 500);
+  const { isLoading: isLoadingProduct, data: dataProduct } = useGetProduct(
+    debounceFilterProduct,
+  );
 
   useEffect(() => {
-    let isMounted = true;
-
-    const fetchProducts = async () => {
-      try {
-        setIsloading(true);
-
-        const res = await getProduct();
-
-        if (isMounted) {
-          setDataProduct(res.data.data ?? []);
-        }
-      } catch (error) {
-        if (isMounted) {
-          toast.error(getErrorMessage(error));
-        }
-      } finally {
-        if (isMounted) {
-          setIsloading(false);
-        }
-      }
-    };
-
-    fetchProducts();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const options = dataProduct.map((item) => ({
-    label: item.name,
-    value: String(item.id),
-  }));
+    if (data?.product && data.product.name) {
+      // eslint-disable-next-line
+      setFiltersProduct((prev) => ({ ...prev, search: data?.product.name }));
+    }
+  }, [data?.product]);
 
   return (
     <>
-      {!isEdit && (
-        <Select
-          id="productId"
-          label="Product"
-          options={options}
-          value={String(values.productId)}
-          onChange={(event) =>
-            onChange("productId", Number(event.target.value))
-          }
-          disabled={isLoading}
-          required
-        />
+      <Input
+        id="searchProduct"
+        label="Search Product"
+        placeholder="e.g. Minyak kutus-kutus"
+        value={filtersProduct.search}
+        onChange={(e) => {
+          setFiltersProduct((prev) => ({ ...prev, search: e.target.value }));
+          onChange("productId", 0);
+        }}
+      />
+
+      {!values.productId && (
+        <div className={styles.itemWrapper}>
+          {isLoadingProduct ? (
+            <p className={styles.loadingText}>Loading...</p>
+          ) : dataProduct?.data.data && dataProduct.data.data.length > 0 ? (
+            dataProduct.data.data.map((item, index) => (
+              <div
+                key={`${item.id}-${index}-product`}
+                className={styles.item}
+                onClick={() => {
+                  if (item.id !== values.productId) {
+                    setFiltersProduct((prev) => ({
+                      ...prev,
+                      search: item.name,
+                    }));
+                    onChange("productId", item.id);
+                  }
+                }}
+              >
+                {item.name}
+              </div>
+            ))
+          ) : (
+            <p className={styles.loadingText}>Not Found</p>
+          )}
+        </div>
       )}
 
       <Input
