@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/Button/Button";
@@ -6,61 +6,61 @@ import { Form } from "@/components/Form/Form";
 import { Modal } from "@/components/Modal/Modal";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { FormProvider } from "@/context/FormProvider";
-import { useDebounce } from "@/hooks/useDebounce";
 import { useMutation } from "@/hooks/useMutation";
-import type { Params } from "@/types/request";
 import type { ApiResponse } from "@/types/response";
 import { getErrorMessage } from "@/utilities/error";
-import { CustomerFilters } from "../components/CustomerFilters";
-import { CustomerForm } from "../components/CustomerForm";
-import { CustomerTable } from "../components/CustomerTable";
-import { useGetCustomer } from "../hooks/useGetCustomer";
-import { postCustomer, putCustomer } from "../services/customerService";
-import type { CustomerRequest, CustomerResponse } from "../types/customer";
+import { CashFlowFilters } from "../components/CashFlowFilters";
+import { CashFlowForm } from "../components/CashFlowForm";
+import { CashFlowTable } from "../components/CashFlowTable";
+import { useGetCashFlow } from "../hooks/useGetCashFlow";
+import { postCashFlow, putCashFlow } from "../services/cashflowService";
+import type {
+  CashFlowParams,
+  CashFlowRequest,
+  CashFlowResponse,
+} from "../types/cashflow";
 
-import styles from "./CustomerPage.module.css";
+import styles from "./CashFlowPage.module.css";
 
-export const CustomerPage = () => {
-  const [search, setSearch] = useState("");
-  const initialFilter: Params = {
-    search: "",
+export const CashFlowPage = () => {
+  const initialFilter: CashFlowParams = {
+    type: undefined,
+    category: undefined,
     page: 1,
     limit: 10,
   };
-  const [filters, setFilters] = useState<Params>(initialFilter);
+  const [filters, setFilters] = useState<CashFlowParams>(initialFilter);
 
-  const debouncedSearch = useDebounce(search, 500);
-
-  const handleChangeFilter = <K extends keyof Params>(
+  const handleChangeFilter = <K extends keyof CashFlowParams>(
     name: K,
-    value: Params[K],
+    value: CashFlowParams[K],
   ) => {
     setFilters((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "limit" || name === "search" ? { page: 1 } : {}),
+      ...(name === "limit" || name === "type" || name === "category"
+        ? { page: 1 }
+        : {}),
     }));
   };
 
-  useEffect(() => {
-    handleChangeFilter("search", debouncedSearch); // eslint-disable-line
-  }, [debouncedSearch]);
-
-  const { isLoading, data } = useGetCustomer(filters);
+  const { isLoading, data } = useGetCashFlow(filters);
 
   const [isOpen, setIsOpen] = useState(false);
 
   const [id, setId] = useState<number>();
 
-  const initialRequest: CustomerRequest = {
-    name: "",
-    phone: "",
+  const initialRequest: CashFlowRequest = {
+    type: "IN",
+    category: "LOAN",
+    amount: 0,
+    note: "",
   };
-  const [request, setRequest] = useState<CustomerRequest>(initialRequest);
+  const [request, setRequest] = useState<CashFlowRequest>(initialRequest);
 
-  const handleChange = <K extends keyof CustomerRequest>(
+  const handleChange = <K extends keyof CashFlowRequest>(
     name: K,
-    value: CustomerRequest[K],
+    value: CashFlowRequest[K],
   ) => {
     setRequest((prev) => ({
       ...prev,
@@ -73,11 +73,13 @@ export const CustomerPage = () => {
     setIsOpen(true);
   };
 
-  const handleClickEdit = (data: CustomerResponse) => {
+  const handleClickEdit = (data: CashFlowResponse) => {
     setId(data.id);
     setRequest({
-      name: data.name,
-      phone: data.phone,
+      type: data.type,
+      category: data.category,
+      amount: data.amount,
+      note: data.note,
     });
     setIsOpen(true);
   };
@@ -89,22 +91,22 @@ export const CustomerPage = () => {
     setIsOpen(false);
   };
 
-  const addCustomer = useMutation<
-    CustomerRequest,
-    ApiResponse<CustomerResponse>
+  const addCashFlow = useMutation<
+    CashFlowRequest,
+    ApiResponse<CashFlowResponse>
   >(
-    postCustomer,
+    postCashFlow,
     (response) => {
       handleResetState();
       toast.success(response.message);
     },
     (error) => toast.error(getErrorMessage(error)),
   );
-  const editCustomer = useMutation<
-    { id: number } & CustomerRequest,
-    ApiResponse<CustomerResponse>
+  const editCashFlow = useMutation<
+    { id: number } & CashFlowRequest,
+    ApiResponse<CashFlowResponse>
   >(
-    putCustomer,
+    putCashFlow,
     (response) => {
       handleResetState();
       toast.success(response.message);
@@ -114,25 +116,25 @@ export const CustomerPage = () => {
 
   const handleSubmit = async () => {
     if (id)
-      return await editCustomer.mutate({
+      return await editCashFlow.mutate({
         ...request,
         id,
       });
 
-    await addCustomer.mutate(request);
+    await addCashFlow.mutate(request);
   };
 
   return (
     <main>
       <div className={styles.addButtonWrapper}>
         <div className={styles.addButton}>
-          <Button onClick={handleClickAdd}>Add Customer</Button>
+          <Button onClick={handleClickAdd}>Add CashFlow</Button>
         </div>
       </div>
 
-      <CustomerFilters search={search} onSearch={setSearch} />
+      <CashFlowFilters filter={filters} onChangeFilter={handleChangeFilter} />
 
-      <CustomerTable
+      <CashFlowTable
         isLoading={isLoading}
         data={data?.data?.data}
         onClickEdit={handleClickEdit}
@@ -151,15 +153,15 @@ export const CustomerPage = () => {
         size="xl"
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        title={`${id ? "Edit" : "Add"} Customer`}
+        title={`${id ? "Edit" : "Add"} CashFlow`}
       >
         <Form onSubmit={handleSubmit}>
           <FormProvider values={request} onChange={handleChange}>
-            <CustomerForm />
+            <CashFlowForm />
           </FormProvider>
 
-          <Button disabled={addCustomer.isLoading}>
-            {addCustomer.isLoading ? "Loading..." : "Submit"}
+          <Button disabled={addCashFlow.isLoading}>
+            {addCashFlow.isLoading ? "Loading..." : "Submit"}
           </Button>
         </Form>
       </Modal>

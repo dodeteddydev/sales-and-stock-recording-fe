@@ -1,0 +1,27 @@
+.wrapperFund {
+  margin-bottom: var(--space-5);
+}
+
+.wrapperItems {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+@media (max-width: 992px) {
+  .wrapperItems {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 576px) {
+  .wrapperItems {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 768px) {
+  .wrapperFund {
+    width: 66%;
+  }
+}

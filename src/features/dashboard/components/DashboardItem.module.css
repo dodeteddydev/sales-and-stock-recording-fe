@@ -1,0 +1,44 @@
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-5);
+}
+
+.wrapper:hover {
+  border-color: var(--color-primary);
+}
+
+.wrapper.clickable {
+  cursor: pointer;
+}
+
+.wrapperContent {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: white;
+}
+
+.title {
+  margin: 0 0 var(--space-2);
+  font-size: 14px;
+}
+
+.value {
+  margin: 0;
+  font-size: 24px;
+}

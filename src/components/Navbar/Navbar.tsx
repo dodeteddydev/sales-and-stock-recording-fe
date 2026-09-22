@@ -1,12 +1,20 @@
 import { Menu } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 import styles from "./Navbar.module.css";
+import { capitalizeText } from "@/utilities/capitalizeText";
 
 type NavbarProps = {
   onMenuClick: () => void;
 };
 
 export const Navbar = ({ onMenuClick }: NavbarProps) => {
+  const location = useLocation();
+
+  const menu = location.pathname.split("/")[1];
+
+  const title = `${capitalizeText(menu)} Page`;
+
   return (
     <header className={styles.navbar}>
       <button
@@ -18,7 +26,7 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
         <Menu size={25} />
       </button>
 
-      <p className={styles.title}>Dashboard</p>
+      <p className={styles.title}>{title}</p>
     </header>
   );
 };

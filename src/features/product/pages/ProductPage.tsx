@@ -73,6 +73,7 @@ export const ProductPage = () => {
   const handleClickAdd = () => {
     setRequest(initialRequest);
     setIsOpen(true);
+    setId(undefined);
   };
 
   const handleClickEdit = (data: ProductResponse) => {
@@ -124,30 +125,28 @@ export const ProductPage = () => {
   };
 
   return (
-    <>
-      <main>
-        <div className={styles.addButtonWrapper}>
-          <div className={styles.addButton}>
-            <Button onClick={handleClickAdd}>Add Product</Button>
-          </div>
+    <main>
+      <div className={styles.addButtonWrapper}>
+        <div className={styles.addButton}>
+          <Button onClick={handleClickAdd}>Add Product</Button>
         </div>
+      </div>
 
-        <ProductFilters search={search} onSearch={setSearch} />
+      <ProductFilters search={search} onSearch={setSearch} />
 
-        <ProductTable
-          isLoading={isLoading}
-          data={data?.data?.data}
-          onClickEdit={handleClickEdit}
+      <ProductTable
+        isLoading={isLoading}
+        data={data?.data?.data}
+        onClickEdit={handleClickEdit}
+      />
+
+      {data?.data.meta && data.data.meta.total > 10 && (
+        <Pagination
+          meta={data.data.meta}
+          onChangeLimit={(limit) => handleChangeFilter("limit", limit)}
+          onChangePage={(page) => handleChangeFilter("page", page)}
         />
-
-        {data?.data.meta && data.data.meta.total > 10 && (
-          <Pagination
-            meta={data.data.meta}
-            onChangeLimit={(limit) => handleChangeFilter("limit", limit)}
-            onChangePage={(page) => handleChangeFilter("page", page)}
-          />
-        )}
-      </main>
+      )}
 
       <Modal
         position="top"
@@ -158,7 +157,7 @@ export const ProductPage = () => {
       >
         <Form onSubmit={handleSubmit}>
           <FormProvider values={request} onChange={handleChange}>
-            <ProductForm isEdit={!!id} />
+            <ProductForm />
           </FormProvider>
 
           <Button disabled={addProduct.isLoading}>
@@ -166,6 +165,6 @@ export const ProductPage = () => {
           </Button>
         </Form>
       </Modal>
-    </>
+    </main>
   );
 };

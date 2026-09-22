@@ -1,0 +1,31 @@
+.notFoundWrapper {
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.content {
+  max-width: 500px;
+}
+
+.code {
+  margin: 0;
+  font-size: 120px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.title {
+  margin: 20px 0 8px;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.description {
+  margin: 0 0 24px;
+  color: #6b7280;
+  font-size: 16px;
+}

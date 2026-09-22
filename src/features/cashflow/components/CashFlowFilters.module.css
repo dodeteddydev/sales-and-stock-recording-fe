@@ -1,0 +1,15 @@
+.cashFlowFilter {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.fieldWrapper {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .fieldWrapper {
+    width: 15.9%;
+  }
+}

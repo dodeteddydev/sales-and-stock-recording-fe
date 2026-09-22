@@ -25,5 +25,5 @@ export type RefreshTokenResponse = {
 
 export type IdNameResponse = {
   id: number;
-  name: number;
+  name: string;
 };
