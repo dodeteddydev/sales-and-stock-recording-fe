@@ -2,6 +2,7 @@ import type { IdNameResponse } from "@/types/response";
 
 export type RestockRequest = {
   productId: number;
+  productName: string;
   qty: number;
 };
 

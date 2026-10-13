@@ -45,6 +45,7 @@ export const RestockPage = () => {
 
   const initialRequest: RestockRequest = {
     productId: 0,
+    productName: "",
     qty: 0,
   };
   const [request, setRequest] = useState<RestockRequest>(initialRequest);
@@ -69,6 +70,7 @@ export const RestockPage = () => {
     setId(data.id);
     setRequest({
       productId: data.product.id,
+      productName: data.product.name,
       qty: data.qty,
     });
     setIsOpen(true);
@@ -90,7 +92,10 @@ export const RestockPage = () => {
     (error) => toast.error(getErrorMessage(error)),
   );
   const editRestock = useMutation<
-    { id: number } & RestockRequest,
+    {
+      id: number;
+      request: RestockRequest;
+    },
     ApiResponse<RestockResponse>
   >(
     putRestock,
@@ -102,11 +107,13 @@ export const RestockPage = () => {
   );
 
   const handleSubmit = async () => {
-    if (id)
-      return await editRestock.mutate({
-        ...request,
+    if (id !== undefined) {
+      await editRestock.mutate({
         id,
+        request,
       });
+      return;
+    }
 
     await addRestock.mutate(request);
   };
@@ -145,8 +152,10 @@ export const RestockPage = () => {
             <RestockForm isEdit={!!id} />
           </FormProvider>
 
-          <Button disabled={addRestock.isLoading}>
-            {addRestock.isLoading ? "Loading..." : "Submit"}
+          <Button disabled={addRestock.isLoading || editRestock.isLoading}>
+            {addRestock.isLoading || editRestock.isLoading
+              ? "Loading..."
+              : "Submit"}
           </Button>
         </Form>
       </Modal>

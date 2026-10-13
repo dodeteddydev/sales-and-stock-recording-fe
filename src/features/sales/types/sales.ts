@@ -2,7 +2,9 @@ import type { IdNameResponse } from "@/types/response";
 
 export type SalesRequest = {
   customerId: number;
+  customerName: string;
   productId: number;
+  productName: string;
   qty: number;
 };
 

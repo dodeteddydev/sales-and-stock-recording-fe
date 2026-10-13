@@ -24,11 +24,15 @@ export const postCashFlow = async (request: CashFlowRequest) => {
   return response.data;
 };
 
-export const putCashFlow = async (
-  request: { id: number } & CashFlowRequest,
-) => {
+export const putCashFlow = async ({
+  id,
+  request,
+}: {
+  id: number;
+  request: CashFlowRequest;
+}) => {
   const response = await api.put<ApiResponse<CashFlowResponse>>(
-    `/cash-flow/${request.id}`,
+    `/cash-flow/${id}`,
     request,
   );
 

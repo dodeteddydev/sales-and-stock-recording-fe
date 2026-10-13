@@ -21,11 +21,15 @@ export const postCustomer = async (request: CustomerRequest) => {
   return response.data;
 };
 
-export const putCustomer = async (
-  request: { id: number } & CustomerRequest,
-) => {
+export const putCustomer = async ({
+  id,
+  request,
+}: {
+  id: number;
+  request: CustomerRequest;
+}) => {
   const response = await api.put<ApiResponse<CustomerResponse>>(
-    `/customer/${request.id}`,
+    `/customer/${id}`,
     request,
   );
 

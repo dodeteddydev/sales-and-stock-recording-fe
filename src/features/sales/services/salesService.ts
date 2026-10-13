@@ -18,9 +18,15 @@ export const postSales = async (request: SalesRequest) => {
   return response.data;
 };
 
-export const putSales = async (request: { id: number } & SalesRequest) => {
+export const putSales = async ({
+  id,
+  request,
+}: {
+  id: number;
+  request: SalesRequest;
+}) => {
   const response = await api.put<ApiResponse<SalesResponse>>(
-    `/sale/${request.id}`,
+    `/sale/${id}`,
     request,
   );
 

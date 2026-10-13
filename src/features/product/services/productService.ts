@@ -21,9 +21,15 @@ export const postProduct = async (request: ProductRequest) => {
   return response.data;
 };
 
-export const putProduct = async (request: { id: number } & ProductRequest) => {
+export const putProduct = async ({
+  id,
+  request,
+}: {
+  id: number;
+  request: ProductRequest;
+}) => {
   const response = await api.put<ApiResponse<ProductResponse>>(
-    `/product/${request.id}`,
+    `/product/${id}`,
     request,
   );
 

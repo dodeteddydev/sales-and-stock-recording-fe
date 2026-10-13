@@ -21,9 +21,15 @@ export const postRestock = async (request: RestockRequest) => {
   return response.data;
 };
 
-export const putRestock = async (request: { id: number } & RestockRequest) => {
+export const putRestock = async ({
+  id,
+  request,
+}: {
+  id: number;
+  request: RestockRequest;
+}) => {
   const response = await api.put<ApiResponse<RestockResponse>>(
-    `/restock/${request.id}`,
+    `/restock/${id}`,
     request,
   );
 

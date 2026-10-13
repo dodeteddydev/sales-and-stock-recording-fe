@@ -103,7 +103,7 @@ export const ProductPage = () => {
     (error) => toast.error(getErrorMessage(error)),
   );
   const editProduct = useMutation<
-    { id: number } & ProductRequest,
+    { id: number; request: ProductRequest },
     ApiResponse<ProductResponse>
   >(
     putProduct,
@@ -115,10 +115,10 @@ export const ProductPage = () => {
   );
 
   const handleSubmit = async () => {
-    if (id)
+    if (id !== undefined)
       return await editProduct.mutate({
-        ...request,
         id,
+        request,
       });
 
     await addProduct.mutate(request);

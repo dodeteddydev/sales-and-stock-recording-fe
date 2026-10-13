@@ -103,7 +103,7 @@ export const CashFlowPage = () => {
     (error) => toast.error(getErrorMessage(error)),
   );
   const editCashFlow = useMutation<
-    { id: number } & CashFlowRequest,
+    { id: number; request: CashFlowRequest },
     ApiResponse<CashFlowResponse>
   >(
     putCashFlow,
@@ -115,10 +115,10 @@ export const CashFlowPage = () => {
   );
 
   const handleSubmit = async () => {
-    if (id)
+    if (id !== undefined)
       return await editCashFlow.mutate({
-        ...request,
         id,
+        request,
       });
 
     await addCashFlow.mutate(request);

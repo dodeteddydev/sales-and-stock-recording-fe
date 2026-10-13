@@ -101,7 +101,10 @@ export const CustomerPage = () => {
     (error) => toast.error(getErrorMessage(error)),
   );
   const editCustomer = useMutation<
-    { id: number } & CustomerRequest,
+    {
+      id: number;
+      request: CustomerRequest;
+    },
     ApiResponse<CustomerResponse>
   >(
     putCustomer,
@@ -113,11 +116,7 @@ export const CustomerPage = () => {
   );
 
   const handleSubmit = async () => {
-    if (id)
-      return await editCustomer.mutate({
-        ...request,
-        id,
-      });
+    if (id !== undefined) return await editCustomer.mutate({ id, request });
 
     await addCustomer.mutate(request);
   };
@@ -158,8 +157,10 @@ export const CustomerPage = () => {
             <CustomerForm />
           </FormProvider>
 
-          <Button disabled={addCustomer.isLoading}>
-            {addCustomer.isLoading ? "Loading..." : "Submit"}
+          <Button disabled={addCustomer.isLoading || editCustomer.isLoading}>
+            {addCustomer.isLoading || editCustomer.isLoading
+              ? "Loading..."
+              : "Submit"}
           </Button>
         </Form>
       </Modal>

@@ -41,11 +41,13 @@ export const SalesPage = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [selected, setSelected] = useState<SalesResponse>();
+  const [id, setId] = useState<number>();
 
   const initialRequest: SalesRequest = {
     customerId: 0,
+    customerName: "",
     productId: 0,
+    productName: "",
     qty: 0,
   };
   const [request, setRequest] = useState<SalesRequest>(initialRequest);
@@ -63,14 +65,16 @@ export const SalesPage = () => {
   const handleClickAdd = () => {
     setRequest(initialRequest);
     setIsOpen(true);
-    setSelected(undefined);
+    setId(undefined);
   };
 
   const handleClickEdit = (data: SalesResponse) => {
-    setSelected(data);
+    setId(data.id);
     setRequest({
       customerId: data.customer.id,
+      customerName: data.customer.name,
       productId: data.product.id,
+      productName: data.product.name,
       qty: data.qty,
     });
     setIsOpen(true);
@@ -78,7 +82,7 @@ export const SalesPage = () => {
 
   const handleResetState = () => {
     setFilters(initialFilter);
-    setSelected(undefined);
+    setId(undefined);
     setRequest(initialRequest);
     setIsOpen(false);
   };
@@ -92,7 +96,7 @@ export const SalesPage = () => {
     (error) => toast.error(getErrorMessage(error)),
   );
   const editSales = useMutation<
-    { id: number } & SalesRequest,
+    { id: number; request: SalesRequest },
     ApiResponse<SalesResponse>
   >(
     putSales,
@@ -104,10 +108,10 @@ export const SalesPage = () => {
   );
 
   const handleSubmit = async () => {
-    if (selected)
+    if (id !== undefined)
       return await editSales.mutate({
-        ...request,
-        id: selected.id,
+        id,
+        request,
       });
 
     await addSales.mutate(request);
@@ -140,11 +144,11 @@ export const SalesPage = () => {
         size="xl"
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        title={`${selected && selected.id ? "Edit" : "Add"} Sales`}
+        title={`${id ? "Edit" : "Add"} Sales`}
       >
         <Form onSubmit={handleSubmit}>
           <FormProvider values={request} onChange={handleChange}>
-            <SalesForm data={selected} />
+            <SalesForm />
           </FormProvider>
 
           <Button disabled={addSales.isLoading}>
