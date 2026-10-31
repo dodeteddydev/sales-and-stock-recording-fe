@@ -1,29 +1,48 @@
-.loadingText {
-  padding: var(--space-3);
-  text-align: center;
-  font-size: var(--font-size-sm);
+.items {
+  max-height: 50vh;
+  overflow: scroll;
+
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-3) 0;
 }
 
-.itemWrapper {
-  max-height: 150px;
-  overflow-y: scroll;
-
-  margin-bottom: var(--space-3);
-
-  background-color: var(--color-surface);
+.item {
+  padding: var(--space-3);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
 }
 
-.item {
-  padding: var(--space-2);
-  margin: var(--space-1);
-  border-radius: var(--radius-md);
+.item > :first-child {
+  grid-column: 1 / -1;
+}
 
+.removeButtonWraaper {
+  text-align: end;
+}
+
+.removeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-danger);
   cursor: pointer;
 }
 
-.item:hover {
-  background-color: var(--color-primary);
-  color: var(--color-surface);
+.removeButton:hover:not(:disabled) {
+  background: var(--color-border);
+}
+
+.removeButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.addButtonWrapper {
+  margin-bottom: var(--space-3);
 }

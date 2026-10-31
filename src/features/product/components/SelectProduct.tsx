@@ -7,12 +7,14 @@ import type { LoadOptions } from "react-select-async-paginate";
 import { getProduct } from "../services/productService";
 
 type SelectProductProps = {
+  id?: string;
   value: SelectOptionType | null;
   onChange: (value: SingleValue<SelectOptionType>) => void;
   isDisabled?: boolean;
 };
 
 export const SelectProduct = ({
+  id,
   value,
   onChange,
   isDisabled,
@@ -49,6 +51,7 @@ export const SelectProduct = ({
   return (
     <SelectOption
       label="Product"
+      id={id}
       placeholder="Select a product..."
       loadOptions={loadOptions}
       additional={{ page: 1 }}
