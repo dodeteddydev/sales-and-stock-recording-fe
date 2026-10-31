@@ -14,7 +14,11 @@ import { SalesForm } from "../components/SalesForm";
 import { SalesTable } from "../components/SalesTable";
 import { useGetSales } from "../hooks/useGetSales";
 import { postSales, putSales } from "../services/salesService";
-import type { SalesRequest, SalesResponse } from "../types/sales";
+import type {
+  SalesFormValues,
+  SalesRequest,
+  SalesResponse,
+} from "../types/sales";
 
 import styles from "./SalesPage.module.css";
 
@@ -43,39 +47,48 @@ export const SalesPage = () => {
 
   const [id, setId] = useState<number>();
 
-  const initialRequest: SalesRequest = {
+  const createInitialFormValues = (): SalesFormValues => ({
     customerId: 0,
     customerName: "",
-    productId: 0,
-    productName: "",
-    qty: 0,
-  };
-  const [request, setRequest] = useState<SalesRequest>(initialRequest);
+    items: [
+      {
+        key: crypto.randomUUID(),
+        productId: 0,
+        productName: "",
+        qty: 1,
+      },
+    ],
+  });
+  const [formValues, setFormValues] =
+    useState<SalesFormValues>(createInitialFormValues);
 
-  const handleChange = <K extends keyof SalesRequest>(
+  const handleChange = <K extends keyof SalesFormValues>(
     name: K,
-    value: SalesRequest[K],
+    value: SalesFormValues[K],
   ) => {
-    setRequest((prev) => ({
+    setFormValues((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
   const handleClickAdd = () => {
-    setRequest(initialRequest);
+    setFormValues(createInitialFormValues());
     setIsOpen(true);
     setId(undefined);
   };
 
   const handleClickEdit = (data: SalesResponse) => {
     setId(data.id);
-    setRequest({
+    setFormValues({
       customerId: data.customer.id,
       customerName: data.customer.name,
-      productId: data.product.id,
-      productName: data.product.name,
-      qty: data.qty,
+      items: data.items.map((item) => ({
+        key: crypto.randomUUID(),
+        productId: item.product.id,
+        productName: item.product.name,
+        qty: item.qty,
+      })),
     });
     setIsOpen(true);
   };
@@ -83,7 +96,7 @@ export const SalesPage = () => {
   const handleResetState = () => {
     setFilters(initialFilter);
     setId(undefined);
-    setRequest(initialRequest);
+    setFormValues(createInitialFormValues());
     setIsOpen(false);
   };
 
@@ -108,6 +121,25 @@ export const SalesPage = () => {
   );
 
   const handleSubmit = async () => {
+    if (
+      !formValues.customerId ||
+      formValues.items.length === 0 ||
+      formValues.items.some(
+        (item) =>
+          !item.productId || !Number.isFinite(item.qty) || item.qty < 1,
+      )
+    ) {
+      toast.error(
+        "Select a customer and a product with a quantity of at least 1 for every item.",
+      );
+      return;
+    }
+
+    const request: SalesRequest = {
+      customerId: formValues.customerId,
+      items: formValues.items.map(({ productId, qty }) => ({ productId, qty })),
+    };
+
     if (id !== undefined)
       return await editSales.mutate({
         id,
@@ -147,12 +179,12 @@ export const SalesPage = () => {
         title={`${id ? "Edit" : "Add"} Sales`}
       >
         <Form onSubmit={handleSubmit}>
-          <FormProvider values={request} onChange={handleChange}>
+          <FormProvider values={formValues} onChange={handleChange}>
             <SalesForm />
           </FormProvider>
 
-          <Button disabled={addSales.isLoading}>
-            {addSales.isLoading ? "Loading..." : "Submit"}
+          <Button disabled={addSales.isLoading || editSales.isLoading}>
+            {addSales.isLoading || editSales.isLoading ? "Loading..." : "Submit"}
           </Button>
         </Form>
       </Modal>

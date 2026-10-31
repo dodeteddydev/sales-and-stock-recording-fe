@@ -9,6 +9,8 @@ import { Th } from "@/components/Table/Th";
 import type { SalesResponse } from "../types/sales";
 import { formatRupiah } from "@/utilities/formatRupiah";
 
+import styles from "./SalesTable.module.css";
+
 type SalesTableProps = {
   isLoading: boolean;
   data?: SalesResponse[];
@@ -24,7 +26,7 @@ export const SalesTable = ({
     <Table>
       <thead>
         <tr>
-          <Th>Product</Th>
+          <Th>Products</Th>
           <Th>Price</Th>
           <Th>Qty</Th>
           <Th>Total</Th>
@@ -37,12 +39,45 @@ export const SalesTable = ({
 
       <tbody>
         {data && data?.length > 0 && !isLoading ? (
-          data?.map((item, index) => (
-            <tr key={`${item.id}-${index}`}>
-              <Td>{item.product.name || "-"}</Td>
-              <Td>{formatRupiah(item.price ?? 0)}</Td>
-              <Td>{item.qty ?? 0}</Td>
-              <Td>{formatRupiah(item.total ?? 0)}</Td>
+          data.map((item) => (
+            <tr key={item.id}>
+              <Td>
+                <div className={styles.saleItems}>
+                  {item.items.map((saleItem, index) => (
+                    <span key={`${saleItem.product.id}-${index}`}>
+                      {saleItem.product.name || "-"}
+                    </span>
+                  ))}
+                </div>
+              </Td>
+              <Td>
+                <div className={styles.saleItems}>
+                  {item.items.map((saleItem, index) => (
+                    <span key={`${saleItem.product.id}-${index}`}>
+                      {formatRupiah(saleItem.price ?? 0)}
+                    </span>
+                  ))}
+                </div>
+              </Td>
+              <Td>
+                <div className={styles.saleItems}>
+                  {item.items.map((saleItem, index) => (
+                    <span key={`${saleItem.product.id}-${index}`}>
+                      {saleItem.qty ?? 0}
+                    </span>
+                  ))}
+                </div>
+              </Td>
+              <Td>
+                {formatRupiah(
+                  item.total ??
+                    item.items.reduce(
+                      (total, saleItem) =>
+                        total + (saleItem.total ?? saleItem.price * saleItem.qty),
+                      0,
+                    ),
+                )}
+              </Td>
               <Td>{item.customer.name || "-"}</Td>
               <Td>
                 <AuditInfo user={item.createdBy} date={item.createdAt} />
@@ -57,7 +92,7 @@ export const SalesTable = ({
           ))
         ) : (
           <tr>
-            <Td colSpan={6}>
+            <Td colSpan={8}>
               <EmptyState isLoading={isLoading} />
             </Td>
           </tr>
